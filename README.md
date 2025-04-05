@@ -6,6 +6,8 @@
 
 - Python 3.13 or higher
 - pip (Python package installer)
+- - Node.js (v16+)
+- npm (v8+)
 - Git
 
 ### Local Environment Setup
@@ -34,7 +36,15 @@
 3. **Install dependencies**
 
    ```bash
+   # Install Python dependencies
+   cd HireTune
+   python -m venv .venv
+   source .venv/bin/activate  # On macOS/Linux
    pip install -r requirements.txt
+
+   # Install Node.js dependencies
+   cd HireTuneSite/frontend
+   npm install
    ```
 
 4. **Set up the database**
@@ -50,11 +60,28 @@
    python manage.py createsuperuser
    ```
 
-6. **Run the development server**
+6. **Running the Application**  
+   You'll need two terminal windows:
+
+   Terminal 1:  Run the webpack build process
+   This watches for changes to React files and rebuilds automatically.
+
    ```bash
+   cd HireTuneSite/frontend
+   npm run dev
+   ```
+
+   Terminal 2: Run the Django server
+
+   ```bash
+   cd HireTuneSite
    python manage.py runserver
    ```
-   The site will be available at http://127.0.0.1:8000/
+
+   **Access the Application**  
+   Open your browser and visit: http://127.0.0.1:8000/
+
+   The Django server will serve your React application. When you make changes to React components, webpack will automatically rebuild them, but you'll need to refresh your browser to see the changes.
 
 ### Development Workflow
 
