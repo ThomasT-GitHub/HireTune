@@ -48,23 +48,22 @@
    ```
 
 
-4. **Set up the database**
-   ## Pre-requesite, Docker!
-   
+4. **Set up Docker**  
+   To set up Docker, just install it, from here on out we use the Docker CLI to test
 
-   Begin by hosting a local PostgreSQL database on your device
-   Give the db a user with a password
+   To build, use docker compose up -d --build
+   This builds our program with its database, but this isn't the final  implementation for it
 
-   Alter the user to use client encoding utf8
-   Set the default_transaction_isolation to 'red committed'
-   and set the timezone to 'UTC'
+   This is ran detatched, you can see the results at 0.0.0.0:8000
 
-   Then grant the user all privledges on the database   
-
-   ```bash
-   cd HireTuneSite
-   python manage.py migrate
+   to run commands, we'll be using
+   ``` bash
+      docker compose exec <command>
    ```
+
+   The rest of readme assumes you are using docker compose exec, so it provides <command>
+   
+   When referencing manage.py, we really  mean HireTuneSite/manage.py, so make sure to make that swap at every point
 
 5. **Create a superuser (admin)**
 
