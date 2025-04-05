@@ -47,12 +47,23 @@
    npm install
    ```
 
-4. **Set up the database**
 
-   ```bash
-   cd HireTuneSite
-   python manage.py migrate
+4. **Set up Docker**  
+   To set up Docker, just install it, from here on out we use the Docker CLI to test
+
+   To build, use docker compose up -d --build
+   This builds our program with its database, but this isn't the final  implementation for it
+
+   This is ran detatched, you can see the results at 0.0.0.0:8000
+
+   to run commands, we'll be using
+   ``` bash
+      docker compose exec <command>
    ```
+
+   The rest of readme assumes you are using docker compose exec, so it provides <command>
+   
+   When referencing manage.py, we really  mean HireTuneSite/manage.py, so make sure to make that swap at every point
 
 5. **Create a superuser (admin)**
 
