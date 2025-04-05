@@ -37,7 +37,19 @@
    pip install -r requirements.txt
    ```
 
+
 4. **Set up the database**
+   ## Pre-requesite, Docker!
+   
+
+   Begin by hosting a local PostgreSQL database on your device
+   Give the db a user with a password
+
+   Alter the user to use client encoding utf8
+   Set the default_transaction_isolation to 'red committed'
+   and set the timezone to 'UTC'
+
+   Then grant the user all privledges on the database   
 
    ```bash
    cd HireTuneSite
