@@ -24,3 +24,5 @@ TestResults.xml
 .venv
 # node
 node_modules
+# .env
+.env
