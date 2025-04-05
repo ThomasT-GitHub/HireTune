@@ -20,7 +20,7 @@
 2. **Create and activate a virtual environment**
 
    ```bash
-   # Create Virtual Enviornment
+   # Create Virtual Enviornment on all Platforms
    python -m venv .venv
 
    # Activate Virtual Enviornment
