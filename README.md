@@ -1,6 +1,6 @@
 # HireTune
 
-## Setup Guide for New Developers
+##  Guide
 
 ### Prerequisites
 
