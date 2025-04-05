@@ -121,9 +121,36 @@
    ```bash
    python manage.py test
    ```
+### Local PostgreSQL Management
+1. **Installation**
+   Install PostgreSQL to your device. This can either be done in the command line or through [here](https://www.postgresql.org/download/)
+   You will need postgresql postgresql-server and postgresql-contrib
+
+   All future instructions utilize the PostgreSQL CLI
+2. **Initializing the Database**
+   Run 
+   ```bash
+   sudo postgresql-setup --initdb
+   ```
+
+   PostgreSQL needs md5 authentication, it is set to some local termianl one by default, you must change it yourself
+
+### Enviornment Variables
+   In the root of the repo, on local devices and in production, there should be a file called .env
+   This file is where sensitive information like API keys or credentials can be read from
+   
+   For the sake of this project, a template is provided here for simpler duplication
+   ```
+      # Database Configuration
+      DB_NAME=hiretune_db
+      DB_USER=faris
+      DB_PASSWORD=faris
+      DB_HOST=localhost
+      DB_PORT=5432
+   ```
 
 ## Project Structure
-
+- .env: Enviornment variables
 - `HireTuneSite/`: Main Django project folder
   - `manage.py`: Django management script
   - `HireTuneSite/`: Project configuration folder
@@ -134,5 +161,6 @@
 ## Additional Resources
 
 - [Django Documentation](https://docs.djangoproject.com/)
+- [Django Rest Framework Documentation](https://www.django-rest-framework.org/)
 - [Git Documentation](https://git-scm.com/doc)
 - [GitHub Documentation](https://docs.github.com/)
