@@ -20,8 +20,10 @@
 2. **Create and activate a virtual environment**
 
    ```bash
+   # Create Virtual Enviornment
    python -m venv .venv
 
+   # Activate Virtual Enviornment
    # On Windows
    .venv\Scripts\activate
 
