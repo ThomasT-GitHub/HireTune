@@ -26,3 +26,4 @@ TestResults.xml
 node_modules
 # .env
 .env
+__pycache__

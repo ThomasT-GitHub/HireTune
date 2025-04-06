@@ -3,11 +3,12 @@ const path = require("path");
 module.exports = {
   entry: {
     main: "./src/index.js",
-    tuner: "./src/components/Tuner.js"
+    tuner: "./src/components/Tuner.js",
+    applicationView: "./src/components/ApplicationView.js"
   },
   output: {
     path: path.resolve(__dirname, "./static/frontend"),
-    filename: "[name].js" // This will produce main.js and tuner.js
+    filename: "[name].js"
   },
   module: {
     rules: [
