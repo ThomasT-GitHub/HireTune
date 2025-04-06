@@ -8,16 +8,17 @@ from pylatex import Document, NoEscape
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from HireTuneSite.models import JobApplication, Account
+from frontend.models import JobApplication, Account
 from django.views.decorators.http import require_http_methods
 
 
 def current_user(request):
     data = {
-        'is_authenticated': request.user.is_authenticated,
-        'username': request.user.username if request.user.is_authenticated else None,
+        "is_authenticated": request.user.is_authenticated,
+        "username": request.user.username if request.user.is_authenticated else None,
     }
     return JsonResponse(data)
+
 
 def index(request):
     return render(request, "frontend/index.html")

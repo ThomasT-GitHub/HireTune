@@ -255,7 +255,7 @@ return (
                         </h1>
                     </div>
                       {userData && userData.is_authenticated ? (
-                      <span>
+                      <span className="col text-end">
                         <button className="btn btn-outline-light me-2">
                           Applications
                         </button>
@@ -268,20 +268,11 @@ return (
                       </span>
                     ) : (
                       <a href="/tuner/auth/login/discord/?next=/tuner/">
-                        <button className="btn btn-outline-light me-2">
-                          Sign In
+                        <button className="btn btn-outline-light me-2 col text-end">
+                          Log In
                         </button>
                       </a>
                     )}
-                    // Replace the existing Sign In button with this version
-                    <div className="col text-end">
-                        <a 
-                            href="/applications/" 
-                            className="btn btn-outline-light me-2"
-                        >
-                            My Applications
-                        </a>
-                    </div>
                 </div>
 
                 {/* Forms Row */}
