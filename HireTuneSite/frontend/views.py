@@ -31,8 +31,24 @@ def tune_resume(request):
 
         # Construct a single prompt to pass to the API.
         prompt = (
-            "You are a professional resume editor. Your task is to tune the given resume in LaTeX format "
-            "to better match the job description. Return only JSON with field: 'tuned_resume' .\n\n"
+            "You are an elite technical résumé editor. Your task is to rewrite the candidate’s résumé "
+            "in LaTeX so it is laser‑aligned with the job description. Return ONLY valid JSON with a single "
+            "field: 'tuned_resume'.\n\n"
+            "**Process (follow in order)**\n"
+            "1. Extract the 8‑12 most critical skills, technologies, and soft skills from the job description.\n"
+            "2. For each requirement, mark whether the current résumé covers it strongly, weakly, or not at all.\n"
+            "3. Rewrite & re‑organize the résumé:\n"
+            "   • Re‑order sections so the most relevant experience appears first.\n"
+            "   • Rewrite bullet points using active verbs and quantified impact (%, $, latency, users, etc.).\n"
+            "   • Naturally inject keywords from step 1; avoid keyword stuffing.\n"
+            "   • Keep ≤ 5 bullets per role; trim irrelevant content.\n"
+            "   • Surface transferable evidence when a requirement is missing.\n"
+            "4. Polish:\n"
+            "   • Maintain valid LaTeX syntax and consistent tense (present for current role, past for previous).\n"
+            "   • Keep résumé ≤ 1 page if possible (2 max).\n"
+            "   • No first‑person pronouns.\n\n"
+            "**Output Format**\n"
+            '{\\n  \\"tuned_resume\\": \\"<FULL LaTeX OF THE REWRITTEN RÉSUMÉ>\\"\\n}\n\n'
             f"Resume in LaTeX format:\n{resume}\n\n"
             f"Job Description:\n{job_description}\n"
         )
