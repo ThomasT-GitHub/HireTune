@@ -1,8 +1,6 @@
 # Pull base image
 FROM python:3.13.2-slim-bullseye
 
-ENV OPENAI_API_KEY="PUT KEY"
-
 # Set environment variables
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PYTHONDONTWRITEBYTECODE=1

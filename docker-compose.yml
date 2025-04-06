@@ -18,6 +18,8 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - PYTHONUNBUFFERED=1
       - PYTHONFAULTHANDLER=1
+      - OPENAI_API_KEY=${OPENAI_SECRET}
+
 
   frontend:
     image: node:18
