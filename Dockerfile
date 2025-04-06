@@ -10,8 +10,19 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /code
 
 # Install dependencies
-COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+COPY ./requirements.txt /requirements.txt
 
-# Copy project
-COPY . .
+RUN python -m venv /py && \
+    /py/bin/pip install --upgrade pip && \
+    apt-get update && \
+    rm -rf /var/lib/apt/lists/*
+        
+
+RUN /py/bin/pip install -r /requirements.txt
+
+COPY ./HireTuneSite /HireTuneSite
+WORKDIR /HireTuneSite
+
+ENV PATH="/py/bin:$PATH"
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
