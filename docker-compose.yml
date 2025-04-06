@@ -1,7 +1,6 @@
 services:
-  web:
-    build:
-      context: .
+  backend:
+    build: .
     ports:
       - "8000:8000"
     env_file:
@@ -17,6 +16,13 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
+
+  frontend:
+    image: node:18
+    working_dir: /code/HireTuneSite/frontend
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - .:/code
 
   db:
     image: postgres:17.1
