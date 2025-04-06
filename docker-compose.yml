@@ -11,6 +11,9 @@ services:
       - db
     env_file:
       - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONFAULTHANDLER=1
 
   frontend:
     image: node:18
