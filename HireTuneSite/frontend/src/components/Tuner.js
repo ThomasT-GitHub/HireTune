@@ -91,7 +91,9 @@ function Tuner() {
               </h1>
             </div>
             <div className="col text-end">
-              <button className="btn btn-outline-light me-2">Sign In</button>
+              <a href='/tuner/auth/login/discord/?next=/tuner/'>
+                <button className="btn btn-outline-light me-2">Sign In</button>
+              </a> 
             </div>
           </div>
 
