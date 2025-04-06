@@ -16,7 +16,6 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-    environment:
       - PYTHONUNBUFFERED=1
       - PYTHONFAULTHANDLER=1
 
