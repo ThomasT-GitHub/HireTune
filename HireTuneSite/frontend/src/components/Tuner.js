@@ -1,4 +1,6 @@
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
 // Import Bootstrap CSS
@@ -59,6 +61,18 @@ const button3 = {
 };
 
 function Tuner() {
+  // Updates the state of the user
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    fetch('http://0.0.0.0:8000/api/current_user/', {
+      credentials: 'include', // ensures cookies are sent for session auth
+    })
+    .then(response => response.json())
+    .then(data => setUserData(data))
+    .catch(error => console.error('Error fetching current user:', error));
+  }, []);
+  
   return (
     <>
       {/* Style tag for placeholder and button glow styling */}
