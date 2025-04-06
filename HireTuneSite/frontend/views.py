@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from frontend.models import JobApplication, Account
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 
 def current_user(request):
@@ -30,6 +32,13 @@ def tuner(request):
 
 def applicationView(request):
     return render(request, "frontend/applicationView.html")
+
+
+# Add this function to your views.py
+def logout_view(request):
+    """Log the user out and redirect to the landing page"""
+    logout(request)
+    return redirect("/")
 
 
 @csrf_exempt

@@ -56,19 +56,20 @@ const button3 = {
   "--btn-glow-color": "rgba(61, 255, 116, 0.6)"
 };
 
-
 function Tuner() {
-
   const [userData, setUserData] = useState(null);
-
-
   const [resumeText, setResumeText] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [result, setResult] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [newApplication, setNewApplication] = useState({
+    name: "",
+    url: "",
+    comments: ""
+  });
 
   useEffect(() => {
     fetch('/api/current_user/', {
@@ -144,10 +145,7 @@ function Tuner() {
       }
       
       if (!pdfResponse.ok) {
-        // Try to extract error details
-        const errorText = await pdfResponse.text();
-        console.error("PDF Error Response:", errorText);
-        throw new Error(`PDF generation error: ${pdfResponse.status} - ${errorText}`);
+        throw new Error(`API error: ${pdfResponse.status}`);
       }
       
       const pdfBlob = await pdfResponse.blob();
@@ -156,7 +154,7 @@ function Tuner() {
       // Create an object URL for the generated PDF
       const pdfObjectUrl = URL.createObjectURL(pdfBlob);
       console.log("PDF URL created:", pdfObjectUrl);
-      setPdfUrl(pdfObjectUrl); // Use the actual PDF instead of the dummy URL
+      setPdfUrl(pdfObjectUrl);
     } catch (err) {
       console.error("Error generating PDF:", err);
       setError(`PDF generation error: ${err.message}`);
@@ -187,230 +185,338 @@ function Tuner() {
     }
   };
 
-  const handleSaveResume = async () => {
+  const handleSaveResume = () => {
     if (!pdfUrl) {
-        setError("No resume to save");
-        return;
+      setError("No resume to save");
+      return;
     }
-    
+
+    // Reset form data and show the modal
+    setNewApplication({
+      name: "",
+      url: "",
+      comments: ""
+    });
+    setShowSaveModal(true);
+  };
+
+  const handleApplicationChange = (e) => {
+    const { name, value } = e.target;
+    setNewApplication(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSaveApplication = async () => {
+    if (!newApplication.name) {
+      setError("Please enter a job title");
+      return;
+    }
+
     try {
-        const jobName = prompt("Enter a name for this job application:");
-        if (!jobName) return; // User cancelled
-        
-        const jobUrl = prompt("Enter the URL for the job posting (optional):");
-        
-        const response = await fetch("/api/save-application/", { // Changed endpoint
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                name: jobName,
-                url: jobUrl || "",
-                resume: pdfUrl
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
-        
-        alert("Resume saved successfully!");
+      const response = await fetch("/api/save-application/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: newApplication.name,
+          url: newApplication.url,
+          resume: pdfUrl,
+          comments: newApplication.comments
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      // Hide modal
+      setShowSaveModal(false);
+      
+      // Show success message
+      setError(null);
+      alert("Application saved successfully!");
     } catch (err) {
-        setError(`Failed to save resume: ${err.message}`);
+      setError(`Failed to save resume: ${err.message}`);
     }
-};
+  };
   
-return (
+  return (
     <>
-        <style>
-            {`
-                .placeholder-light::placeholder {
-                    color: #9CA3AF !important;
-                    opacity: 1;
-                }
-                .btn-glow {
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                    transition: box-shadow 0.3s ease-in-out;
-                }
-                .btn-glow:hover {
-                    box-shadow: 0 4px 12px var(--btn-glow-color);
-                }
-                .spinner-border {
-                    margin-right: 8px;
-                }
-                iframe {
-                    border: none;
-                }
-            `}
-        </style>
-        <div className="container-fluid p-3 text-light" style={containerStyle}>
-            <div className="mx-auto" style={{ maxWidth: "1000px" }}>
-                <div className="row mb-3">
-                    <div className="col">
-                        <h1>
-                            <a href="/" style={{ textDecoration: "none", color: "#ffffff" }}>
-                                Hire<span style={{ color: "#3DFF74" }}>Tune</span>
-                            </a>
-                        </h1>
-                    </div>
-                      {userData && userData.is_authenticated ? (
-                      <span className="col text-end">
-                        <button className="btn btn-outline-light me-2">
-                          Applications
-                        </button>
-                        Welcome, {userData.username}
-                        <a href="/tuner/auth/login/discord/?next=/tuner/">
-                          <button className="btn btn-outline-light btn-fill-red me-2">
-                            Log Out
-                          </button>
-                        </a>
-                      </span>
-                    ) : (
-                      <a href="/tuner/auth/login/discord/?next=/tuner/">
-                        <button className="btn btn-outline-light me-2 col text-end">
-                          Log In
-                        </button>
-                      </a>
-                    )}
-                </div>
-
-                {/* Forms Row */}
-                <div className="row g-3">
-                    <div className="col-md-6">
-                        <div className="mb-3">
-                            <textarea
-                                className="form-control placeholder-light"
-                                id="resumeInput"
-                                rows="10"
-                                style={formDivStyle}
-                                placeholder="Enter resume here (LaTeX format)"
-                                value={resumeText}
-                                onChange={(e) => setResumeText(e.target.value)}
-                            />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                        <div className="mb-3">
-                            <textarea
-                                className="form-control placeholder-light"
-                                id="jobInput"
-                                rows="10"
-                                style={formDivStyle}
-                                placeholder="Enter job description or modification here"
-                                value={jobDescription}
-                                onChange={(e) => setJobDescription(e.target.value)}
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Error Message */}
-                {error && (
-                    <div className="alert alert-danger" role="alert">
-                        {error}
-                    </div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="row mt-3">
-                    <div className="col">
-                        <div className="d-flex justify-content-center" style={{ gap: "10px" }}>
-                        <button 
-                                className="btn btn-secondary btn-glow" 
-                                style={button1}
-                                onClick={handleSaveResume}
-                                disabled={!pdfUrl || isLoading}
-                            >
-                                Save
-                            </button>
-                            <button 
-                                className="btn btn-primary btn-glow" 
-                                style={button2}
-                                onClick={handleDownloadPDF}
-                                disabled={!pdfUrl}
-                            >
-                                Download
-                            </button>
-                            <button
-                                className="btn btn-success btn-glow"
-                                style={button3}
-                                onClick={handleTuneResume}
-                                disabled={isLoading}
-                            >
-                                {isLoading ? (
-                                    <>
-                                        <span
-                                            className="spinner-border spinner-border-sm"
-                                            role="status"
-                                            aria-hidden="true"
-                                        ></span>
-                                        Processing...
-                                    </>
-                                ) : (
-                                    "Tune my resume"
-                                )}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* PDF/Result Preview */}
-                <div className="row mt-4 justify-content-center">
-                    <div className="col-12">
-                        <div className="form-control" style={pdfFormView}>
-                            <div style={{ 
-                                width: "100%", 
-                                minHeight: "600px",  // Set minimum height instead of fixed height
-                                height: "auto",      // Allow auto height
-                                overflow: "visible", // Change from auto to visible to allow expansion
-                                padding: "15px" 
-                            }}>
-                                {pdfUrl ? (
-                                    <iframe
-                                        title="Tuned Resume PDF"
-                                        src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                                        style={{ 
-                                            width: "100%", 
-                                            height: "800px",
-                                            border: "none",
-                                            display: "block",
-                                            backgroundColor: "#fff", 
-                                            overflow: "hidden" 
-                                        }}
-                                    ></iframe>
-                                ) : result ? (
-                                    // Improved fallback: Text now fills the entire container
-                                    <pre style={{ 
-                                        color: "#ffffff", 
-                                        textAlign: "left",
-                                        width: "100%",
-                                        height: "800px", // Match iframe height
-                                        backgroundColor: "#1a1a1a", // Slightly lighter than background for contrast
-                                        padding: "20px",
-                                        margin: "0",
-                                        overflowY: "auto", // Scrollable if content is too long
-                                        display: "block",
-                                        borderRadius: "4px",
-                                        fontSize: "14px",
-                                        fontFamily: "monospace",
-                                        whiteSpace: "pre-wrap" // Ensures text wraps properly
-                                    }}>
-                                        {JSON.stringify(result, null, 2)}
-                                    </pre>
-                                ) : (
-                                    <div className="text-center text-light p-5">
-                                        {isLoading ? "Processing your resume..." : "Tuned resume will appear here"}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <style>
+        {`
+            .placeholder-light::placeholder {
+                color: #9CA3AF !important;
+                opacity: 1;
+            }
+            .btn-glow {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                transition: box-shadow 0.3s ease-in-out;
+            }
+            .btn-glow:hover {
+                box-shadow: 0 4px 12px var(--btn-glow-color);
+            }
+            .spinner-border {
+                margin-right: 8px;
+            }
+            iframe {
+                border: none;
+            }
+        `}
+      </style>
+      <div className="container-fluid p-3 text-light" style={containerStyle}>
+        <div className="mx-auto" style={{ maxWidth: "1000px" }}>
+          <div className="row mb-3 align-items-center">
+            <div className="col">
+              <h1>
+                <a href="/" style={{ textDecoration: "none", color: "#ffffff" }}>
+                  Hire<span style={{ color: "#3DFF74" }}>Tune</span>
+                </a>
+              </h1>
             </div>
+            {userData && userData.is_authenticated ? (
+              <div className="col d-flex align-items-center justify-content-end">
+                <div className="d-flex align-items-center me-3">
+                  {
+                    <img
+                      src={userData.avatar_hash ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar_hash}.png?size=32` : "https://cdn.discordapp.com/embed/avatars/0.png"}
+                      alt="Profile"
+                      className="rounded-circle"
+                      style={{ width: "32px", height: "32px", objectFit: "cover" }}
+                    />
+                  }
+                </div>
+                <a href="/applications/" className="btn btn-outline-light me-2">
+                  Applications
+                </a>
+                <a href="/api/logout/" className="btn btn-outline-danger">
+                  Log Out
+                </a>
+              </div>
+            ) : (
+              <div className="col text-end">
+                <a href="/tuner/auth/login/discord/?next=/tuner/" className="btn btn-outline-light">
+                  Log In with Discord
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* Forms Row */}
+          <div className="row g-3">
+            <div className="col-md-6">
+              <div className="mb-3">
+                <textarea
+                  className="form-control placeholder-light"
+                  id="resumeInput"
+                  rows="10"
+                  style={formDivStyle}
+                  placeholder="Enter resume here (LaTeX format)"
+                  value={resumeText}
+                  onChange={(e) => setResumeText(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="mb-3">
+                <textarea
+                  className="form-control placeholder-light"
+                  id="jobInput"
+                  rows="10"
+                  style={formDivStyle}
+                  placeholder="Enter job description or modification here"
+                  value={jobDescription}
+                  onChange={(e) => setJobDescription(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="row mt-3">
+            <div className="col">
+              <div className="d-flex justify-content-center" style={{ gap: "10px" }}>
+                <button 
+                  className="btn btn-secondary btn-glow" 
+                  style={button1}
+                  onClick={handleSaveResume}
+                  disabled={!pdfUrl || isLoading}
+                >
+                  Save
+                </button>
+                <button 
+                  className="btn btn-primary btn-glow" 
+                  style={button2}
+                  onClick={handleDownloadPDF}
+                  disabled={!pdfUrl}
+                >
+                  Download
+                </button>
+                <button
+                  className="btn btn-success btn-glow"
+                  style={button3}
+                  onClick={handleTuneResume}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <span
+                        className="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                      Processing...
+                    </>
+                  ) : (
+                    "Tune my resume"
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* PDF/Result Preview */}
+          <div className="row mt-4 justify-content-center">
+            <div className="col-12">
+              <div className="form-control" style={pdfFormView}>
+                <div style={{ 
+                  width: "100%", 
+                  minHeight: "600px",
+                  height: "auto",
+                  overflow: "visible",
+                  padding: "15px" 
+                }}>
+                  {pdfUrl ? (
+                    <iframe
+                      title="Tuned Resume PDF"
+                      src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                      style={{ 
+                        width: "100%", 
+                        height: "800px",
+                        border: "none",
+                        display: "block",
+                        backgroundColor: "#fff", 
+                        overflow: "hidden" 
+                      }}
+                    ></iframe>
+                  ) : result ? (
+                    <pre style={{ 
+                      color: "#ffffff", 
+                      textAlign: "left",
+                      width: "100%",
+                      height: "800px",
+                      backgroundColor: "#1a1a1a",
+                      padding: "20px",
+                      margin: "0",
+                      overflowY: "auto",
+                      display: "block",
+                      borderRadius: "4px",
+                      fontSize: "14px",
+                      fontFamily: "monospace",
+                      whiteSpace: "pre-wrap"
+                    }}>
+                      {JSON.stringify(result, null, 2)}
+                    </pre>
+                  ) : (
+                    <div className="text-center text-light p-5">
+                      {isLoading ? "Processing your resume..." : "Tuned resume will appear here"}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+      
+      {/* Save Application Modal */}
+      <div className={`modal fade ${showSaveModal ? 'show' : ''}`} 
+        id="saveModal" 
+        tabIndex="-1" 
+        aria-labelledby="saveModalLabel" 
+        aria-hidden={!showSaveModal}
+        style={{ display: showSaveModal ? 'block' : 'none' }}>
+        <div className="modal-dialog">
+          <div className="modal-content bg-dark text-light">
+            <div className="modal-header">
+              <h5 className="modal-title" id="saveModalLabel">Save Job Application</h5>
+              <button type="button" className="btn-close btn-close-white" onClick={() => setShowSaveModal(false)} aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <div className="mb-3">
+                <label htmlFor="name" className="form-label">Job Title</label>
+                <input
+                  type="text"
+                  className="form-control bg-dark text-light"
+                  id="name"
+                  name="name"
+                  value={newApplication.name}
+                  onChange={handleApplicationChange}
+                  required
+                />
+              </div>
+              
+              <div className="mb-3">
+                <label htmlFor="url" className="form-label">Job URL</label>
+                <input
+                  type="url"
+                  className="form-control bg-dark text-light"
+                  id="url"
+                  name="url"
+                  value={newApplication.url}
+                  onChange={handleApplicationChange}
+                  placeholder="https://example.com/job"
+                />
+              </div>
+              
+              <div className="mb-3">
+                <label htmlFor="comments" className="form-label">Comments</label>
+                <textarea
+                  className="form-control bg-dark text-light"
+                  id="comments"
+                  name="comments"
+                  value={newApplication.comments}
+                  onChange={handleApplicationChange}
+                  rows="3"
+                ></textarea>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                onClick={() => setShowSaveModal(false)}>
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-primary btn-glow" 
+                onClick={handleSaveApplication}>
+                Save Application
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Modal Background Overlay */}
+      {showSaveModal && (
+        <div 
+          className="modal-backdrop fade show" 
+          onClick={() => setShowSaveModal(false)}
+        ></div>
+      )}
     </>
-);
+  );
 }
 
 document.addEventListener("DOMContentLoaded", () => {

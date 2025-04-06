@@ -17,4 +17,5 @@ urlpatterns = [
     ),
     path("api/save-application/", views.save_application, name="save_application"),
     path("api/current_user/", views.current_user, name="current_user"),
+    path("api/logout/", views.logout_view, name="logout"),
 ]
