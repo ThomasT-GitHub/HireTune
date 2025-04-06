@@ -1,4 +1,10 @@
 import React from "react";
+import { createRoot } from "react-dom/client";
+
+// Import Bootstrap CSS
+import "bootstrap/dist/css/bootstrap.min.css";
+// If you need Bootstrap JavaScript
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const containerStyle = {
   backgroundColor: "#030712",
@@ -23,27 +29,31 @@ const pdfFormView = {
   borderWidth: 3,
   borderStyle: "solid",
   maxWidth: "1000px",
+  fontWeight: "bold",
   width: "100%",
   margin: "0 auto"
 };
 
 const button1 = {
   backgroundColor: "#CACACA",
-  width: "30%",
+  width: "25%",
+  fontWeight: "bold",
   color: "#000000",
   "--btn-glow-color": "rgba(202, 202, 202, 0.6)"
 };
 
 const button2 = {
   backgroundColor: "#3D6DFF",
-  width: "30%",
+  fontWeight: "bold",
+  width: "25%",
   color: "#000000",
   "--btn-glow-color": "rgba(61, 109, 255, 0.6)"
 };
 
 const button3 = {
   backgroundColor: "#3DFF74",
-  width: "40%",
+  width: "50%",
+  fontWeight: "bold",
   color: "#000000",
   "--btn-glow-color": "rgba(61, 255, 116, 0.6)"
 };
@@ -77,12 +87,11 @@ function Tuner() {
           <div className="row mb-3">
             <div className="col">
               <h1>
-                Hire<span style={{ color: "#3DFF74" }}>Tune</span>
+                <a href="/" style={{ textDecoration: "none", color: "#ffffff" }}>Hire<span style={{ color: "#3DFF74" }}>Tune</span></a>
               </h1>
             </div>
             <div className="col text-end">
               <button className="btn btn-outline-light me-2">Sign In</button>
-              <button className="btn btn-outline-light">Sign Up</button>
             </div>
           </div>
 
@@ -138,5 +147,13 @@ function Tuner() {
     </>
   );
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("app");
+    if (container) {
+      const root = createRoot(container);
+      root.render(<Tuner />);
+    }
+  });
 
 export default Tuner;
