@@ -25,17 +25,46 @@ const pdfFormView = {
   margin: "0 auto"
 };
 
+const button1 = {
+  backgroundColor: "#CACACA",
+  width: "30%",
+  "--btn-glow-color": "rgba(202, 202, 202, 0.6)",
+};
+
+const button2 = {
+  backgroundColor: "#3D6DFF",
+  width: "30%",
+  "--btn-glow-color": "rgba(61, 109, 255, 0.6)",
+};
+
+const button3 = {
+  backgroundColor: "#3DFF74",
+  width: "40%",
+  "--btn-glow-color": "rgba(61, 255, 116, 0.6)",
+};
+
 function App() {
   return (
     <>
       {/* Style tag for placeholder styling */}
       <style>
-       {`
-          .placeholder-light::placeholder {
-            color: #9CA3AF !important;
-            opacity: 1;
-          }
-        `}
+      {`
+  .placeholder-light::placeholder {
+    color: #9CA3AF !important;
+    opacity: 1;
+  }
+
+  /* Glow effect for buttons */
+  .btn-glow {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  .btn-glow:hover {
+    /* Uses the custom property defined inline on each button */
+    box-shadow: 0 4px 12px var(--btn-glow-color);
+  }
+`}
       </style>
       <div className="container-fluid p-3 text-light" style={containerStyle}>
         {/* FIXED WIDTH CONTAINER FOR FORMS */}
@@ -60,7 +89,7 @@ function App() {
                   id="resumeInput"
                   rows="10"
                   style={formDivStyle}
-                  placeholder="Enter resume here"
+                  placeholder="Entdsaddsadasadaer resume here"
                 />
               </div>
             </div>
@@ -80,12 +109,14 @@ function App() {
 
         {/* Action Buttons Row */}
         <div className="row mt-3">
-          <div className="col text-center">
-            <button className="btn btn-secondary me-2">Save</button>
-            <button className="btn btn-primary me-2">Download</button>
-            <button className="btn btn-success">Tune my resume</button>
+          <div className="col">
+            <div className="d-flex justify-content-center" style={{ gap: "10px" }}>
+              <button className="btn btn-secondary" style={button1}>Save</button>
+              <button className="btn btn-primary" style={button2}>Download</button>
+              <button className="btn btn-success" style={button3}>Tune my resume</button>
+            </div>
           </div>
-        </div>
+      </div>
 
         {/* PDF Preview Row */}
         <div className="row mt-4 justify-content-center">
