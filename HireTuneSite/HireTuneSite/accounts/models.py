@@ -16,6 +16,7 @@ class ApplicationStatus(models.TextChoices):
     INTERVIEW = 'INT', 'Interview'
     REJECTED = 'REJ', 'Rejected'
     OFFER = 'OFF', 'Offer'
+    
 class JobApplication(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="job_applications")
     resume = models.URLField()

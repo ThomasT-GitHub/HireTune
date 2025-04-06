@@ -1,4 +1,4 @@
-from models import Account
+from HireTuneSite.accounts.models import Account
 
 def update_discord_data(backend, user, response, *args, **kwargs):
     if backend.name == 'discord':

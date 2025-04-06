@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -58,6 +58,10 @@ const button3 = {
 
 
 function Tuner() {
+
+  const [userData, setUserData] = useState(null);
+
+
   const [resumeText, setResumeText] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [result, setResult] = useState(null);
@@ -65,6 +69,16 @@ function Tuner() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   
+
+  useEffect(() => {
+    fetch('/api/current_user/', {
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(data => setUserData(data))
+      .catch(err => console.error("Error fetching user:", err));
+  }, []);
+
   // Function to handle tuning the resume
   const handleTuneResume = async () => {
     if (!resumeText || !jobDescription) {
@@ -206,9 +220,25 @@ return (
                             </a>
                         </h1>
                     </div>
-                    <div className="col text-end">
-                        <button className="btn btn-outline-light me-2">Sign In</button>
-                    </div>
+                      {userData && userData.is_authenticated ? (
+                      <span>
+                        <button className="btn btn-outline-light me-2">
+                          Applications
+                        </button>
+                        Welcome, {userData.username}
+                        <a href="/tuner/auth/login/discord/?next=/tuner/">
+                          <button className="btn btn-outline-light btn-fill-red me-2">
+                            Log Out
+                          </button>
+                        </a>
+                      </span>
+                    ) : (
+                      <a href="/tuner/auth/login/discord/?next=/tuner/">
+                        <button className="btn btn-outline-light me-2">
+                          Sign In
+                        </button>
+                      </a>
+                    )}
                 </div>
 
                 {/* Forms Row */}
