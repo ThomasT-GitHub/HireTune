@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-7^%4#4p4hpnfx291=6x%8!!1+r-6+#60y259cfu9y#gzjhgrbr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
 
 
 # Application definition
@@ -54,6 +54,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "HireTuneSite.urls"
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 TEMPLATES = [
     {
@@ -85,19 +86,19 @@ WSGI_APPLICATION = "HireTuneSite.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST', default='localhost'),  
-        'PORT': config('DB_PORT', default='5432'),  
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST", default="localhost"),
+        "PORT": config("DB_PORT", default="5432"),
     }
 }
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.discord.DiscordOAuth2',  # Discord OAuth2 backend
-    'django.contrib.auth.backends.ModelBackend',
+    "social_core.backends.discord.DiscordOAuth2",  # Discord OAuth2 backend
+    "django.contrib.auth.backends.ModelBackend",
 )
 
 
@@ -120,25 +121,25 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 SOCIAL_AUTH_PIPELINE = (
-    'social_core.pipeline.social_auth.social_details',
-    'social_core.pipeline.social_auth.social_uid',
-    'social_core.pipeline.social_auth.auth_allowed',
-    'social_core.pipeline.social_auth.social_user',
-    'social_core.pipeline.user.get_username',
-    'social_core.pipeline.user.create_user',
-    'your_app.social_pipeline.update_discord_data', 
-    'social_core.pipeline.social_auth.associate_user',
-    'social_core.pipeline.social_auth.load_extra_data',
-    'social_core.pipeline.user.user_details',
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.get_username",
+    "social_core.pipeline.user.create_user",
+    "your_app.social_pipeline.update_discord_data",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
 )
 
-SOCIAL_AUTH_DISCORD_KEY = config('DISC_CLIENT_ID')
-SOCIAL_AUTH_DISCORD_SECRET = config('DISC_CLIENT_SECRET')
-SOCIAL_AUTH_DISCORD_SCOPE = ['identify', 'email']
-LOGIN_REDIRECT_URL = '/tuner/'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/tuner/'
+SOCIAL_AUTH_DISCORD_KEY = config("DISC_CLIENT_ID")
+SOCIAL_AUTH_DISCORD_SECRET = config("DISC_CLIENT_SECRET")
+SOCIAL_AUTH_DISCORD_SCOPE = ["identify", "email"]
+LOGIN_REDIRECT_URL = "/tuner/"
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/tuner/"
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
-SOCIAL_AUTH_LOGIN_ERROR_URL = '/tuner/'
+SOCIAL_AUTH_LOGIN_ERROR_URL = "/tuner/"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
