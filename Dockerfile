@@ -19,15 +19,17 @@ RUN apt-get update && apt-get install -y nodejs npm \
 WORKDIR /code
 
 # Install dependencies
-COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+COPY ./requirements.txt /requirements.txt
 
-# Install frontend dependencies
-COPY HireTuneSite/frontend/package*.json HireTuneSite/frontend/
-RUN cd HireTuneSite/frontend && npm install
+RUN python -m venv /py && \
+    /py/bin/pip install --upgrade pip && \
+    /py/bin/pip install -r /requirements.txt
 
-# Copy project
-COPY . .
+COPY ./HireTuneSite /HireTuneSite
+WORKDIR /HireTuneSite
 
-# Add command to run the server
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+ENV PATH="/py/bin:$PATH"
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+

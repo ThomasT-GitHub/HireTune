@@ -5,6 +5,8 @@ import json
 import os
 from openai import OpenAI
 from pylatex import Document, NoEscape
+from django.http import HttpResponse
+from django.views import View
 
 
 def index(request):
